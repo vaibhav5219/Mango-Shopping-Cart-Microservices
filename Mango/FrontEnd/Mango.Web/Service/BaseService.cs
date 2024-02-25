@@ -71,7 +71,7 @@ namespace Mango.Web.Service
                 var dto = new ResponseDto()
                 {
                     Message = ex.Message.ToString(),
-                    IsSuccess = true
+                    IsSuccess = false
                 };
                 return dto;
             }
