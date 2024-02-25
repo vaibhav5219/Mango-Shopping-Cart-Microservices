@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/coupon")]
     [ApiController]
     public class CouponAPIController : ControllerBase
     {
@@ -29,6 +29,7 @@ namespace Mango.Services.CouponAPI.Controllers
             {
                 IEnumerable<Coupon> objList = _db.Coupons.ToList();
                 _response.Result = _mapper.Map<IEnumerable<CouponDto>>(objList);
+                _response.IsSuccess = true;
             }
             catch (Exception ex)
             {
@@ -62,7 +63,7 @@ namespace Mango.Services.CouponAPI.Controllers
             try
             {
                 Coupon obj = _db.Coupons.FirstOrDefault(u => u.CouponCode.ToLower() == code.ToLower());
-                if(obj == null)
+                if (obj == null)
                 {
                     _response.IsSuccess = false;
                 }
@@ -77,7 +78,6 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
-        [Route("GetByCode/{code}")]
         public ResponseDto Post([FromBody] CouponDto couponDto)
         {
             try
@@ -97,7 +97,6 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
-        [Route("GetByCode/{code}")]
         public ResponseDto Put([FromBody] CouponDto couponDto)
         {
             try
@@ -117,6 +116,7 @@ namespace Mango.Services.CouponAPI.Controllers
         }
 
         [HttpDelete]
+        [Route("{id:int}")]
         public ResponseDto Delete(int id)
         {
             try
