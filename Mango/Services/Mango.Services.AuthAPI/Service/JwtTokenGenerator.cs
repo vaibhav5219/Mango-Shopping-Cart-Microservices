@@ -17,7 +17,7 @@ namespace Mango.Services.AuthAPI.Service
         {
             _jwtOptions = jwtOptions.Value;
         }
-        public string GenerateToken(ApplicationUser applicationUser)
+        public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)
         {
             try
             {
@@ -28,19 +28,21 @@ namespace Mango.Services.AuthAPI.Service
                 var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
                 // 3rd Create claims list ( cliam is a Key value pair)
-                var cliamList = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Name, applicationUser.Name),
-                new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id),
-            };
+                var claimList = new List<Claim>()
+                {
+                    new Claim(JwtRegisteredClaimNames.Name, applicationUser.Name),
+                    new Claim(JwtRegisteredClaimNames.Email, applicationUser.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Id),
+                };
+
+                claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
                 // 4th Create token secriptor
                 var tokenDescriptor = new SecurityTokenDescriptor()
                 {
                     Audience = _jwtOptions.Audience,
                     Issuer = _jwtOptions.Issuer,
-                    Subject = new ClaimsIdentity(cliamList),    //  Consume claimList
+                    Subject = new ClaimsIdentity(claimList),    //  Consume claimList
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) // consume secret key
                 };
