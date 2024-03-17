@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using Mango.Services.CouponAPI.Data;
+using Mango.Services.ProductAPI.Data;
 using AutoMapper;
-using Mango.Services.CouponAPI;
+using Mango.Services.ProductAPI;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Mango.Services.CouponAPI.Extensions;
+using Mango.Services.ProductAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +82,8 @@ void ApplyMigration()
     using (var scope = app.Services.CreateScope())
     {
         var _db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        if (_db.Database.GetAppliedMigrations().Count() > 0)
+        var count = _db.Database.GetAppliedMigrations().Count();
+        if (count > 0)
         {
             _db.Database.Migrate();
         }
