@@ -11,6 +11,7 @@ using Mango.Services.OrderAPI.Service;
 using Mango.Services.OrderAPI.Utility;
 using Mango.MessageBus;
 using Mango.Services.OrderAPI.Extensions;
+//using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductService, Mango.Services.OrderAPI.Service.ProductService>();
 //builder.Services.AddScoped<IConfiguration, Configuration>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
@@ -75,6 +76,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("stripe:SecretKey").Get<string>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

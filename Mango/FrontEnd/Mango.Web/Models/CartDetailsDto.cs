@@ -1,5 +1,5 @@
 ﻿
-namespace Mango.Web.Models.Dto
+namespace Mango.Web.Models
 {
     public class CartDetailsDto
     {

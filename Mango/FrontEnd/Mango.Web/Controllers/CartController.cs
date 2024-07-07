@@ -1,4 +1,4 @@
-﻿using Mango.Web.Models.Dto;
+﻿using Mango.Web.Models;
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -46,10 +46,30 @@ namespace Mango.Web.Controllers
             {
                 // get stripe session and redirect to stripe to place order
 
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+                StripeRequestDto stripeRequestDto = new()
+                {
+                    ApprovedUrl = domain + "cart/Confirmation?orderId=" + orderHeaderDto.OrderHeaderId,
+                    CancelUrl = domain + "cart/checkout",
+                    OrderHeader = orderHeaderDto
+                };
+                var stripeResponse = await _orderService.CreateStripeSession(stripeRequestDto);
+                StripeRequestDto stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDto>(Convert.ToString(stripeResponse.Result));
+
+                Response.Headers.Add("Location", stripeResponseResult.StripeSessionUrl);
+                return new StatusCodeResult(303);
             }
             return View();
 
         }
+
+        // [Authorize]
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+
+            return View(orderId);
+        }
+
 
         public async Task<IActionResult> Remove(int cartDetailsId)
         {
