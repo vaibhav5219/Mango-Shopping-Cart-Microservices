@@ -26,11 +26,18 @@ namespace Mango.Services.EmailAPI.Services
             message.AppendLine("</br>");
             message.AppendLine("</ul>");
 
-            foreach (var item in cartDto.CartDetails)
+            if (cartDto.CartDetails != null)
             {
-                message.Append("<li/>");
-                message.Append(item.Product.Name + " X " + item.Count);
-                message.Append("<li/>");
+                foreach (var item in cartDto.CartDetails)
+                {
+                    message.Append("<li/>");
+                    message.Append(item.Product.Name + " X " + item.Count);
+                    message.Append("<li/>");
+                }
+            }
+            else
+            {
+                message.Append("<li>No items in cart</li>");
             }
 
             message.AppendLine("</ul>");
@@ -45,13 +52,19 @@ namespace Mango.Services.EmailAPI.Services
             await LogAndEmail(message, "vaibhavkumae5219@yopmail.com");
         }
 
+        public async Task RegisterUserEmailAndLog(string email)
+        {
+            string message = "User Registeration Successful. <br/> Email : " + email;
+            await LogAndEmail(message, "vaibhavkumar5219@yopmail.com");
+        }
+
         private async Task<bool> LogAndEmail(string message, string email)
         {
             try
             {
                 EmailLogger emailLog = new()
                 {
-                    Email = email,
+                    Email = email ?? "vaibhavkumar5219@yopmail.com",
                     EmailSent = DateTime.Now,
                     Message = message
                 };

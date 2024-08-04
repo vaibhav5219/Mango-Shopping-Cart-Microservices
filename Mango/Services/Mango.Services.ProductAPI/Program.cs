@@ -73,7 +73,7 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
-ApplyMigration();
+//ApplyMigration();
 
 app.Run();
 

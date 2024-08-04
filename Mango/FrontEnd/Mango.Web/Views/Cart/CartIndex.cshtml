@@ -7,6 +7,16 @@
         <br />
         <input asp-for="CartHeader.UserId" hidden />
         <input asp-for="CartHeader.CartHeaderId" hidden />
+        @* <input asp-for="@Model.CartDetails" hidden /> *@
+        @foreach (var cartObj in Model.CartDetails)
+        {
+            <input type="hidden" name="CartDetails[@cartObj.CartDetailsId].Product.Name" value="@cartObj.Product.Name" />
+            <input type="hidden" name="CartDetails[@cartObj.CartDetailsId].Product.Description" value="@cartObj.Product.Description" />
+            <input type="hidden" name="CartDetails[@cartObj.CartDetailsId].Product.Price" value="@cartObj.Product.Price" />
+            <input type="hidden" name="CartDetails[@cartObj.CartDetailsId].Count" value="@cartObj.Count" />
+            <!-- Add more fields as necessary -->
+        }
+
         <div class="">
             <div class="card border mt-4 container">
                 <div class="card-header bg-dark text-light ml-0 row ">

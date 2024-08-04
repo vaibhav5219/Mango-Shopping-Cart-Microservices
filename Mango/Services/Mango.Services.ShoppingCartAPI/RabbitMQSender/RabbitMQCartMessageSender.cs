@@ -5,15 +5,15 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
 
-namespace Mango.Services.AuthAPI.RabbitMQSender
+namespace Mango.Services.ShoppingCartAPI.RabbitMQSender
 {
-    public class RabbitMQAuthMessageSender : IRabbitMQAuthMessageSender
+    public class RabbitMQCartMessageSender : IRabbitMQCartMessageSender
     {
         private readonly string _hostName;
         private readonly string _userName;
         private readonly string _password;
         private IConnection _connection;
-        public RabbitMQAuthMessageSender()
+        public RabbitMQCartMessageSender()
         {
             _hostName = "localhost";
             _userName = "guest";
@@ -57,7 +57,7 @@ namespace Mango.Services.AuthAPI.RabbitMQSender
                 Console.WriteLine(ex.ToString());
             }
         }
-        private async Task <bool> ConnectionExists()
+        private async Task<bool> ConnectionExists()
         {
             if(_connection != null)
             {
